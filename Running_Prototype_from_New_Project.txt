@@ -1,0 +1,24 @@
+Open new andriod studio project as using navigation template.
+
+Copy the main file into C:\Common_Sense\<project_name>\app\src
+
+On left navigation
+>app
+	>manifest
+	>java
+		>com
+			>commonsense.seniorproject
+			>example.myapplication
+				MainActivity.java
+
+Click on MainActivity.java to open and delete all text inside of the file
+
+On the Gradle Scripts in the left navigation click on build.gradle (Module: app)
+add
+    implementation 'com.google.android.gms:play-services-maps:+'
+    implementation 'com.google.android.gms:play-services-location:+'
+to the dependacies
+
+Click on the green hammer to build and after the build is finished the project should run
+
+		
