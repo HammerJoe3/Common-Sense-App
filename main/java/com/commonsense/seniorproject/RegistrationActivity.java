@@ -23,13 +23,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A login screen that offers login via email/password.
+ * A registration screen that allows users to register and be entered into the database
  */
-public class LoginActivity extends AppCompatActivity  {
+public class RegistrationActivity extends AppCompatActivity {
 
-    private Button login;
-    private Button registerAccount;
-    private Button forgotPassword;  // In case we need to make one later
+    private Button register;
+    private EditText inputFirstName;
+    private EditText inputLastName;
     private EditText inputEmail;
     private EditText inputPassword;
 
@@ -39,16 +39,17 @@ public class LoginActivity extends AppCompatActivity  {
     //private SessionManager session;
 
     /**
-     * onCreate sets the visuals from the activity_login.xml
+     * onCreate sets the visuals from the activity_registration.xml
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_registration);
 
-        login = (Button) findViewById(R.id.login_sign_in_button);
-        registerAccount = (Button) findViewById(R.id.login_register_button);
+        register = (Button) findViewById(R.id.registeration_button);
+        inputFirstName = (EditText) findViewById(R.id.first_name);
+        inputLastName = (EditText) findViewById(R.id.last_name);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
 
@@ -59,19 +60,16 @@ public class LoginActivity extends AppCompatActivity  {
         // Session Manager
         // session = new SessionManager(getApplicationContext());
 
-        // Check if user is already logged in or not
-        // if (session.isLoggedIn()) {
-        //      launch news activity;
-        // }
-
         /**
          * When login button is pressed, check if email and password are valid and non-empty
          * then call CheckLogin
          * @param view
          */
-        login.setOnClickListener(new View.OnClickListener() {
+        register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String firstName = inputFirstName.getText().toString().trim();
+                String lastName = inputLastName.getText().toString().trim();
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
 
@@ -81,12 +79,14 @@ public class LoginActivity extends AppCompatActivity  {
                 }
 
                 // Check for empty data in the form
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    //login user
-                    checkLogin(email, password);
+                if (!firstName.isEmpty() && !lastName.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
+                    // register user
+                    checkRegistration(firstName, lastName, email, password);
                 } else {
                     // Prompt the user to enter credentials
-                    if (email.isEmpty()) {
+                    if (firstName.isEmpty() || lastName.isEmpty()) {
+                        inputFirstName.setError("Please enter your name");
+                    } else if (email.isEmpty()) {
                         inputEmail.setError("Please enter a valid email");
                     } else {
                         inputPassword.setError("Please enter your password");
@@ -94,35 +94,27 @@ public class LoginActivity extends AppCompatActivity  {
                 }
             }
         });
-
-        /**
-         * When register button is pressed, launch RegisterActivity
-         */
-        registerAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchRegistrationActivity();
-            }
-        });
     }
 
     /**
-     * Attempts to check user's login information with what is in the database.  If correct, proceed to the NavigationActivity,
+     * Attempts to register the user and add them into the database.  If successful, return to login,
      * Otherwise, tell the user that the information was wrong and prompt the user to try again
+     * @param firstName
+     * @param lastName
      * @param email
      * @param password
      */
-    private void checkLogin(final String email, final String password) {
+    private void checkRegistration(final String firstName, final String lastName, final String email, final String password) {
         //tag used to cancel the request
-        String tag_string_req = "req_login";
+        String tag_string_req = "req_register";
 
-        pDialog.setMessage("Logging in...");
+        pDialog.setMessage("Registering...");
         showDialog();
 
-        StringRequest strReq = new StringRequest(Method.POST, CommonSenseConfig.URL_LOGIN, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Method.POST, CommonSenseConfig.URL_REGISTER, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("onResponse", "login response: " + response);
+                Log.d("onResponse", "Register response: " + response);
                 hideDialog();
 
                 try {
@@ -138,10 +130,13 @@ public class LoginActivity extends AppCompatActivity  {
                         // String userID = jObj.getString("userID");
                         // session.setUserID(userID);
 
-                        launchNavigationActivity();
+                        finishRegistration();
+                        Toast.makeText(getApplicationContext(), "User successfully registered.", Toast.LENGTH_LONG).show();
+
                     } else {
                         // error in login, get Error Message
                         String errorMsg = jObj.getString("error_msg");
+                        inputEmail.setError("Email already exists in our database");
                         Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
@@ -163,6 +158,8 @@ public class LoginActivity extends AppCompatActivity  {
             protected Map<String, String> getParams() {
                 // Posting params to login url
                 Map<String, String> params = new HashMap<String, String>();
+                params.put("first_name", firstName);
+                params.put("last_name", lastName);
                 params.put("email", email);
                 params.put("password", password);
 
@@ -190,12 +187,7 @@ public class LoginActivity extends AppCompatActivity  {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
-    private void launchNavigationActivity() {
-        Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
-        startActivity(intent);
-    }
-    private void launchRegistrationActivity() {
-        Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
-        startActivity(intent);
+    private void finishRegistration() {
+        finish();
     }
 }
