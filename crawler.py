@@ -12,20 +12,22 @@ import urllib.request
 class AppURLopener(urllib.request.FancyURLopener):
     version = "Mozilla/5.0"
 
-class Article:
+
+#class for the articles 
+class Article:     
     articleName = ''
     link = ''
     def __init__(self, articleName, link):
         self.articleName = articleName
         self.link = link
-
+#makes an article and returns it
 def make_article(articleName, link):
     article = Article(articleName, link)
     return article
-
+#removes duplicate articles
 def remove_duplicates(l):
     return list(set(l))
-
+#gets all articles information and returns list of objects type article
 def getArticleInfo(links):
     opener = AppURLopener()
     articles = []
@@ -49,7 +51,7 @@ def getArticleInfo(links):
         #print(subject.text)
         #print("new article")
     return articles
-
+#gets all links that are articles on the source given and returns a list of the links 
 def getLinks(sourcelink):
     res = requests.get(sourcelink)
     #print(res.text)
@@ -68,20 +70,21 @@ def getLinks(sourcelink):
     return getArticleInfo(remove_duplicates(links))
 
 def main():
-    links = getLinks('https://www.webmd.com/news/articles')
+    links = getLinks('https://www.webmd.com/news/articles') # returns the list of objects Articles
     for link in links:
         print(link.link)
         print(link.articleName)
     print("searched website one ")
-    links2 = getLinks('https://www.healthline.com/health-news')
+    links2 = getLinks('https://www.healthline.com/health-news') # returns the list of objects Articles
     for linka in links2:
         print(linka.link)
         print(linka.articleName)
     print("searched website two")
-
+#makes the crawler run every 24 hours
 if __name__=="__main__":
     scheduler = BlockingScheduler()
     scheduler.add_job(main, 'interval', hours=24)
     scheduler.start()
+
 
 
