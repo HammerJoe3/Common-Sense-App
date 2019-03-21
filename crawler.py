@@ -67,21 +67,26 @@ def getLinks(sourcelink):
     return getArticleInfo(remove_duplicates(links))
 
 def main():
+    file = open("links.txt","a")
     links = getLinks('https://www.webmd.com/news/articles') # returns the list of objects Articles
     for link in links:
-        print(link.link)
-        print(link.articleName)
-    print("searched website one ")
+        file.write(link.link+ "\n")
+        file.write(link.articleName+ "\n")
+    file.write("searched website one \n")
     links2 = getLinks('https://www.healthline.com/health-news') # returns the list of objects Articles
     for linka in links2:
-        print(linka.link)
-        print(linka.articleName)
-    print("searched website two")
+        file.write(linka.link+ "\n")
+        file.write(linka.articleName+ "\n")
+    file.write("searched website two\n")
+    file.close()
 #makes the crawler run every 24 hours
 if __name__=="__main__":
+    main()
     scheduler = BlockingScheduler()
     scheduler.add_job(main, 'interval', hours=24)
     scheduler.start()
+
+
 
 
 
