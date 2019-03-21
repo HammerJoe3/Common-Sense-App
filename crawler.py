@@ -1,7 +1,4 @@
-import csv
 import bs4 as bs
-from datetime import datetime
-from threading import Timer
 from apscheduler.schedulers.blocking import BlockingScheduler
 #sauce = Request('https://www.webmd.com/health-insurance/news/20190307/hidden-fda-reports-show-harm-from-medical-devices#1', headers={'User-Agest': 'Mozilla/5.0'})
 
