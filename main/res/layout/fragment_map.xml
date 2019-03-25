@@ -13,6 +13,74 @@
         android:text="@string/map_fragment"
         android:textSize="25sp" />
 
+
+    <RelativeLayout
+        android:id="@+id/relLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="0dp"
+        android:background="@color/dark_purple"
+        android:elevation="10dp">
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:background="#fff"
+            android:text="M"
+            tools:text="M" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="10dp"
+            android:background="#fff"
+            android:text="S"
+            tools:text="S" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginLeft="10dp"
+        android:background="#fff"
+        android:elevation="10dp"
+        android:id="@+id/relLayout1">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:id="@+id/ic_magnify"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/ic_magnify"
+            android:layout_centerVertical="true"
+            android:textSize="15sp"
+            android:textColor="#000"
+            android:id="@+id/input_search"
+            android:background="@null"
+            android:hint="Enter Address, City or Zip Code"
+            android:imeOptions="actionSearch"/>
+
+    </RelativeLayout>
+
+
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
