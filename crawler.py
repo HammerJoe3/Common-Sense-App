@@ -1,12 +1,25 @@
+import csv
+import MySQLdb
+import ConfigParser
 import bs4 as bs
+frome datetime import datetime
+from threading import Timer
 from apscheduler.schedulers.blocking import BlockingScheduler
 #sauce = Request('https://www.webmd.com/health-insurance/news/20190307/hidden-fda-reports-show-harm-from-medical-devices#1', headers={'User-Agest': 'Mozilla/5.0'})
 
 #webpage = urlopen(sauce).read()
 import requests
-import urllib.request
+import urllib
 
-class AppURLopener(urllib.request.FancyURLopener):
+config = ConfigParser.ConfigParser()
+config.read('./config.ini')
+
+hostname = config.get('config','hostname')
+username = config.get('config','username')
+database = config.get('config','database')
+password = config.get('config','password')
+
+class AppURLopener(urllib.FancyURLopener):
     version = "Mozilla/5.0"
 
 
@@ -67,19 +80,26 @@ def getLinks(sourcelink):
     return getArticleInfo(remove_duplicates(links))
 
 def main():
-    file = open("links.txt","a")
+    conn = MySQLdb.connect( host=hostname, user=username, passwd=password, db=database, use_unicode = True, charset = "utf8")
+    cur = conn.cursor()
+    
     links = getLinks('https://www.webmd.com/news/articles') # returns the list of objects Articles
     for link in links:
-        file.write(link.link+ "\n")
-        file.write(link.articleName+ "\n")
-    file.write("searched website one \n")
+        linkEntry = link.link
+        titleEntry = link.articleName
+        cur.execute("Insert into news (link, title, date) values (%s, %s, curdate()) on duplicate key update link=link;", (linkEntry, titleEntry))
+        conn.commit()
+    #print("searched website one ")
     links2 = getLinks('https://www.healthline.com/health-news') # returns the list of objects Articles
     for linka in links2:
-        file.write(linka.link+ "\n")
-        file.write(linka.articleName+ "\n")
-    file.write("searched website two\n")
-    file.close()
+        linkEntry = linka.link
+        titleEntry = linka.articleName
+        cur.execute("Insert into news (link, title, date) values (%s, %s, curdate()) on duplicate key update link=link;", (linkEntry, titleEntry))
+        conn.commit()
+    #print("searched website two")
+    conn.close()
 #makes the crawler run every 24 hours
+main()
 if __name__=="__main__":
     main()
     scheduler = BlockingScheduler()
