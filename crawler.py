@@ -82,21 +82,23 @@ def getLinks(sourcelink):
 def main():
     conn = MySQLdb.connect( host=hostname, user=username, passwd=password, db=database, use_unicode = True, charset = "utf8")
     cur = conn.cursor()
+    conn.execute("Delete from news;")
     
     links = getLinks('https://www.webmd.com/news/articles') # returns the list of objects Articles
     for link in links:
         linkEntry = link.link
         titleEntry = link.articleName
         cur.execute("Insert into news (link, title, date) values (%s, %s, curdate()) on duplicate key update link=link;", (linkEntry, titleEntry))
-        conn.commit()
+        #conn.commit()
     #print("searched website one ")
     links2 = getLinks('https://www.healthline.com/health-news') # returns the list of objects Articles
     for linka in links2:
         linkEntry = linka.link
         titleEntry = linka.articleName
         cur.execute("Insert into news (link, title, date) values (%s, %s, curdate()) on duplicate key update link=link;", (linkEntry, titleEntry))
-        conn.commit()
+        #conn.commit()
     #print("searched website two")
+    conn.commit()
     conn.close()
 #makes the crawler run every 24 hours
 main()
