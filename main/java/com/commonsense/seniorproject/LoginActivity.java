@@ -34,9 +34,7 @@ public class LoginActivity extends AppCompatActivity  {
     private EditText inputPassword;
 
     private ProgressDialog pDialog;
-
-    // Can be used later if we want to save information for later use
-    //private SessionManager session;
+    private SessionManager session;
 
     /**
      * onCreate sets the visuals from the activity_login.xml
@@ -57,12 +55,12 @@ public class LoginActivity extends AppCompatActivity  {
         pDialog.setCancelable(false);
 
         // Session Manager
-        // session = new SessionManager(getApplicationContext());
+        session = new SessionManager(getApplicationContext());
 
         // Check if user is already logged in or not
-        // if (session.isLoggedIn()) {
-        //      launch news activity;
-        // }
+         if (session.isLoggedIn()) {
+              launchNavigationActivity();
+         }
 
         /**
          * When login button is pressed, check if email and password are valid and non-empty
@@ -132,11 +130,13 @@ public class LoginActivity extends AppCompatActivity  {
                     // Check for error node in JSON
                     if (!error) {
                         // User successfully logged in
-                        // TODO: Create Login session here
-                        // session.setLogin(true);
+                        session.setLogin(true);
 
-                        // String userID = jObj.getString("userID");
-                        // session.setUserID(userID);
+                        // TODO: fix this, can't find getString("firstName"), change php or make work
+                        session.setUserID(jObj.getString("UserID"));
+                        session.setFirstName(jObj.getString("firstName"));
+                        session.setLastName(jObj.getString("lastName"));
+                        session.setEmail(jObj.getString("email"));
 
                         launchNavigationActivity();
                     } else {
