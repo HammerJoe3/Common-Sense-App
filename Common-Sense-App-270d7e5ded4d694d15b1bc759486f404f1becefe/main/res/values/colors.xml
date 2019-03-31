@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="black">#000</color>
+    <color name="dark_green">#0d7f3a</color>
+    <color name="bright_green">#0f0</color>
+    <color name="light_green">#b4eeb4</color>
+    <color name="white">#fff</color>
+    <color name="light_blue">#6895fa</color>
+    <color name="light_grey">#dce6e8</color>
+    <color name="light_lavender">#e6e6fa</color>
+    <color name="lavender">#e3c2f2</color>
+    <color name="dark_purple">#3c234e</color>
+    <color name="pink_purple">#9846c3</color>
+    <color name="button_background_color">#925</color>
+</resources>
