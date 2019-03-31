@@ -127,9 +127,25 @@ public class SessionManager {
     public void resetAllOnLogout() {
         setLogin(false);
         editor.remove(KEY_USERID);
-        editor.remove(KEY_LASTNAME);
+        editor.remove(KEY_FIRSTNAME);
         editor.remove(KEY_LASTNAME);
         editor.remove(KEY_EMAIL);
         editor.apply();
+    }
+
+    public void resetAllExecptID() {
+        editor.remove(KEY_FIRSTNAME);
+        editor.remove(KEY_LASTNAME);
+        editor.remove(KEY_EMAIL);
+        editor.apply();
+    }
+
+    public void setAllExceptID(String firstName, String lastName, String email) {
+        editor.putString(KEY_FIRSTNAME, firstName);
+        editor.putString(KEY_LASTNAME, lastName);
+        editor.putString(KEY_EMAIL, email);
+        editor.commit();
+
+        Log.d(TAG, "email session modified");
     }
 }
