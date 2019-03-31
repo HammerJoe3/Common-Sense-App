@@ -21,9 +21,21 @@ formulaSqFootage( totalSqFootage);
 
 
 formulaSqFootage(Int totalSqFootage ){
+//this is for the standard product
+float costPerLiter = 6.00;
+//.0456 is the coverage factor this is a company standard
+float totalOZ = totalSqFootage * .0456;
+//Conversion to mililiters
+float totalML = totalOZ/ .033814;
+float netTotal = (totalML/1000) * costPerLiter;
+// the .20 is for freight percentage 
+float totalProductCost = (netTotal * .20) + netTotal;
+// plus 25 for minutes to set up and takedown  .. 1.4 is standard company machine fog rate
+float minutesOfLabor = ( totalOZ/ 1.4) +25;
+float laborCost = (minutesOfLabor / 60) * 25.00;
+float finalCost = totalProductCost + laborCost;
 
-
-	FORMULA CODE
+System.out.println( " The estimation for the information you provided is    " finalCost);
 
 
 }
@@ -33,8 +45,8 @@ formulaMethod( Int width, Int length, Int height ){
 
 int sqFootage = width x length x height;
 
-price = formula code  
-system.out.println( price );
+
+forulaSqFootage( sqFootage);
 
 
 }
