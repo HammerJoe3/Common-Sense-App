@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,6 +16,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/firstName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -23,6 +25,7 @@
             android:textSize="24sp" />
 
         <EditText
+            android:id="@+id/profileFirst"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -46,6 +49,7 @@
             android:textSize="24sp" />
 
         <EditText
+            android:id="@+id/profileLast"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -69,6 +73,7 @@
             android:textSize="24sp" />
 
         <EditText
+            android:id="@+id/profileEmail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -92,6 +97,7 @@
             android:textSize="24sp" />
 
         <Button
+            android:id="@+id/redeemPoints"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -117,12 +123,13 @@ Click here to get an estimate -->"
 
 
         <Button
+            android:id="@+id/genEst"
             style="@android:style/Widget.Button"
-            android:text="Generate Estimate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"
+            android:text="Generate Estimate" />
 
     </LinearLayout>
 
@@ -134,30 +141,33 @@ Click here to get an estimate -->"
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/save"
             style="@android:style/Widget.Button"
-            android:text="Save Changes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:text="Save Changes" />
 
         <Button
+            android:id="@+id/cancel"
             style="@android:style/Widget.Button"
-            android:text="Cancel Changes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"
+            android:text="Cancel Changes" />
 
     </LinearLayout>
 
     <Button
+        android:id="@+id/logout"
         style="@android:style/Widget.Button"
-        android:text="logout"
-        android:textSize="24sp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="logout"
+        android:textSize="24sp" />
 
 </LinearLayout>
