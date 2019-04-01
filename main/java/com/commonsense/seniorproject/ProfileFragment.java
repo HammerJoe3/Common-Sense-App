@@ -100,20 +100,27 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        genEst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), EstimateActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
     // opens a new page where the user will be able to get an estimate
-    /*private void generateEstimate(View view) {
-        Intent intent = new Intent(getActivity(), EstimateActivity.class);
-        startActivity(intent);
+    private void generateEstimate(View view) {
+
     }
 
     // if the user has enough points, a coupon will be sent to their email and the points deducted
     private void redeemPoints(View view) {
 
     }
-*/
+
 
 
     /**
