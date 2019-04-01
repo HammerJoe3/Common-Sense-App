@@ -53,6 +53,9 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <activity
+            android:name=".EstimateActivity"
+            android:label="Estimate" />
+        <activity
             android:name=".NavigationActivity"
             android:label="@string/title_news" />
         <activity
