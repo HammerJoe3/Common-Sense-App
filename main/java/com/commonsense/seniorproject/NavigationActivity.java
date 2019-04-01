@@ -33,7 +33,7 @@ public class NavigationActivity extends AppCompatActivity {
 
                 case R.id.navigation_map:
                     setTitle("Map");
-                    loadFragment (new MapFragment(NavigationActivity.this));
+                    loadFragment (new MapFragment());
                     return true;
 
                 case R.id.navigation_store:
