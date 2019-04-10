@@ -36,11 +36,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 
 
 @SuppressLint("ValidFragment")
@@ -48,6 +50,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     Location loc;
     MapView mapView;
+    List<List<String>> places = asList(
+            asList( "Superior Fitness", "1490 NJ-37, Toms River, NJ 08753", "longitude", "latitude"),
+            asList( "The U Yoga", "327 Franklin Ave, Wyckoff, NJ 07481", "longitude", "latitude"),
+            asList( "Common Sense Corporate Offices", "815 Ensign Dr Lanoka Harbor, NJ 08734", "longitude", "latitude") );
     double latitude;
     double longitude;
     private final Context mContext;
@@ -85,6 +91,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             @Override
             public void onClick(View v) {
                 geoLocate();
+                setMarkers();
             }
         });
         Button btn2 = view.findViewById(R.id.button3);
@@ -113,11 +120,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (mMap != null) {
                 mMap.getUiSettings().setZoomControlsEnabled(true);
-                //mMap.addMarker(new MarkerOptions().position(new LatLng(43.1, -87.9)));
-                //mMap.addMarker(new MarkerOptions().position(new LatLng(43.5, -87.9)));
                 loc = getLocation();
-                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 15));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 15));
+                getCompleteAddressString(loc.getLatitude(), loc.getLongitude());
+                setMarkers();
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -132,6 +138,113 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Enter something which is currently postal code and return list of places from database
+    //maybe more efficient if every address in db has longitude and latitude and returns a list of all address in a range of
+    //that input longitude and latitude.
+    public List<List<String>> getPlaces(String postal){
+        //places = some_db_retrieval
+        return places;
+    }
+
+    //get address from longitude and latitude to get list of places
+    @SuppressLint("LongLogTag")
+    private void getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(mContext);
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                places = getPlaces(returnedAddress.getPostalCode());
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                strAdd = strReturnedAddress.toString();
+                Log.w("My Current loction address", strReturnedAddress.toString());
+            } else {
+                Log.w("My Current loction address", "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.w("My Current loction address", "Cannot get Address!");
+        }
+    }
+
+    //place markers on the map
+    private void setMarkers() {
+        mMap.clear();//clear old makers
+        for (List place: places
+             ) {
+            if((!place.get(1).equals("")) && (!place.get(1).equals(null))) {
+                mMap.addMarker(new MarkerOptions().position(geoLocate((String) place.get(1))).title((String) place.get(0)));
+            }
+        }
+    }
+
+    //takes input from user and geolocate than grab long/lat from output
+    private void geoLocate(){
+        Log.d("MapFragment", "geoLocate: geolocating");
+
+        String searchString = mSearchText.getText().toString();
+
+        Geocoder geocoder = new Geocoder(mContext);
+        List<Address> list = new ArrayList<>();
+        try{
+            list = geocoder.getFromLocationName(searchString, 1);
+        }catch (IOException e){
+            Log.e("MapFragment", "geoLocate: IOException: " + e.getMessage() );
+        }
+
+        if(list.size() > 0){
+            Address address = list.get(0);
+            Log.d("MapFragment", "geoLocate: found a location: " + address.toString());
+            Log.d("MapFragment", "postal: " + address.getPostalCode());
+            places = getPlaces(address.getPostalCode());
+            //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
+            hideSoftKeyboard();
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 14));
+
+        }
+    }
+
+    //takes input from user and geolocate than grab long/lat from output
+    private LatLng geoLocate(String place){
+        Log.d("MapFragment", "geoLocate: geolocating");
+
+        String searchString = place;
+
+        LatLng placeLatLng = new LatLng(80, 80);
+
+        Geocoder geocoder = new Geocoder(mContext);
+        List<Address> list = new ArrayList<>();
+        try{
+            list = geocoder.getFromLocationName(searchString, 1);
+        }catch (IOException e){
+            Log.e("MapFragment", "geoLocate: IOException: " + e.getMessage() );
+        }
+
+        if(list.size() > 0){
+            Address address = list.get(0);
+
+            Log.d("MapFragment", "geoLocate: found a location: " + address.toString());
+            //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
+            hideSoftKeyboard();
+            placeLatLng = new LatLng(address.getLatitude(), address.getLongitude());
+            return placeLatLng;
+        }
+        return placeLatLng;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    
     //Ask for location permissions
     private void getPermissions(){
         // Here, thisActivity is the current activity
@@ -188,34 +301,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         imm.hideSoftInputFromWindow(mapView.getWindowToken(),0);
     }
 
-    //takes input from user and geolocate than grab long/lat from output
-    private void geoLocate(){
-        Log.d("MapFragment", "geoLocate: geolocating");
-
-        String searchString = mSearchText.getText().toString();
-
-        Geocoder geocoder = new Geocoder(mContext);
-        List<Address> list = new ArrayList<>();
-        try{
-            list = geocoder.getFromLocationName(searchString, 1);
-        }catch (IOException e){
-            Log.e("MapFragment", "geoLocate: IOException: " + e.getMessage() );
-        }
-
-        if(list.size() > 0){
-            Address address = list.get(0);
-
-            Log.d("MapFragment", "geoLocate: found a location: " + address.toString());
-            //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
-            hideSoftKeyboard();
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15));
-
-        }
-    }
-
     //get users location
     private Location getLocation() {
-
         try {
             locationManager = (LocationManager) mContext
                     .getSystemService(mContext.LOCATION_SERVICE);
@@ -262,24 +349,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 }
 
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return loc;
     }
-
-    ///////////Method to create///////////////////////////////////////////////////////////////////////////////////
-    //getStoreMarkers()                   //get store locations from database and set markers                   //
-    //getlastSearchedLocation()           //get users last searched or last recorded location from the database //
-    //////////Methods to Improve//////////////////////////////////////////////////////////////////////////////////
-    //init()                             //fix the geolocate on enter press                                     //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //adjust other method to accommodate implementaiton of new methods                                          //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     //get longitude
     public double getLongitude() {
