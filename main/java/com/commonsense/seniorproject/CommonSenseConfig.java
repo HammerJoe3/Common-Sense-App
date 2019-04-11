@@ -9,4 +9,7 @@ public class CommonSenseConfig {
 
     // Server user update url
     public static String URL_UPDATE_USER_INFO = "http://ec2-3-88-234-227.compute-1.amazonaws.com/common_sense_change_user_info.php";
+    
+    //Server get news url
+    public static String URL_NEWS = "http://ec2-3-88-234-227.compute-1.amazonaws.com/common_sense_news.php";
 }
