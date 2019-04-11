@@ -142,10 +142,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //Enter something which is currently postal code and return list of places from database
-    //maybe more efficient if every address in db has longitude and latitude and returns a list of all address in a range of
-    //that input longitude and latitude.
-    public List<List<String>> getPlaces(String postal){
+    //Enter something which is currently longitude and latitude and return list of places from database
+    public List<List<String>> getPlaces(double Latitude,double Longitude){
         //places = some_db_retrieval
         return places;
     }
@@ -159,7 +157,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
             if (addresses != null) {
                 Address returnedAddress = addresses.get(0);
-                places = getPlaces(returnedAddress.getPostalCode());
+                places = (getPlaces(returnedAddress.getLatitude(), returnedAddress.getLongitude()));
                 StringBuilder strReturnedAddress = new StringBuilder("");
 
                 for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
@@ -205,7 +203,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             Address address = list.get(0);
             Log.d("MapFragment", "geoLocate: found a location: " + address.toString());
             Log.d("MapFragment", "postal: " + address.getPostalCode());
-            places = getPlaces(address.getPostalCode());
+            places = (getPlaces(address.getLatitude(), address.getLongitude()));
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             hideSoftKeyboard();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 14));
