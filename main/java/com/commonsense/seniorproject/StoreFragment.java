@@ -1,5 +1,6 @@
 package com.commonsense.seniorproject;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,15 @@ public class StoreFragment extends Fragment {
         myWebView.loadUrl("https://smartcommonsense.com/shop/");
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        myWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // chromium, enable hardware acceleration
+            myWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            // older android version, disable hardware acceleration
+            myWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        //myWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         myWebView.setWebViewClient(new WebViewClient());
 
         return view;
