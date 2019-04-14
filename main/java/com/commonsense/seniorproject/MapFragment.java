@@ -143,8 +143,57 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Enter something which is currently longitude and latitude and return list of places from database
-    public List<List<String>> getPlaces(double Latitude,double Longitude){
-        //places = some_db_retrieval
+    public List<List<String>> getPlaces(String postal){
+        //TODO: Add Parameters for filtering Database Result
+        String tag_string_req = "req_news";
+
+        Log.e("BEFORE REQUEST", "CHECK");
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        JsonArrayRequest strReq = new JsonArrayRequest(Request.Method.POST, CommonSenseConfig.URL_LOCTEST, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Log.e("AFTER REQUEST", "CHECK");
+                Log.e("onResponse", "news response: " + response);
+
+                try {
+                    JSONArray locations = response;
+                    JSONObject jobj;
+                    for (int i = 0; i < locations.length(); i++){
+                        jobj = locations.getJSONObject(i);
+                        Log.d("DatabaseLoc", jobj.getString("Name"));
+                        //TODO: Add info to places in the format the other methods expect
+                        
+                    }
+
+
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
+                    //Toast.makeText(view.getContext(), "JSON error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Log.e("TAG", "Login error: " + error.getMessage());
+                //Toast.makeText(view.getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting params to news url
+                Map<String, String> params = new HashMap<String, String>();
+
+                //params.put("userID",session.getUserID());
+
+                return params;
+            }
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
         return places;
     }
 
