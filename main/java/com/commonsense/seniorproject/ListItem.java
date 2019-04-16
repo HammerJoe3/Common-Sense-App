@@ -1,4 +1,4 @@
-package com.example.listviewwidget;
+package com.commonsense.seniorproject;
 
 
 public class ListItem {
