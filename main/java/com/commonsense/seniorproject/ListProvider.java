@@ -1,4 +1,4 @@
-package com.example.listviewwidget;
+package com.commonsense.seniorproject;
 
 import java.util.ArrayList;
 
