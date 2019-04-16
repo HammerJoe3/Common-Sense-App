@@ -79,7 +79,7 @@ public class WidgetProvider extends AppWidgetProvider {
                 Toast.makeText(context, link, Toast.LENGTH_LONG).show();
             }
             else {
-                Intent intn = new Intent (context, MainActivity.class);
+                Intent intn = new Intent (context, NewsFragment.class);
                 intn.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intn);
             }
