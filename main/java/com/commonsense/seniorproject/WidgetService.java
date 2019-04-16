@@ -1,4 +1,4 @@
-package com.example.listviewwidget;
+package com.commonsense.seniorproject;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
