@@ -5,6 +5,7 @@ import bs4 as bs
 frome datetime import datetime
 from threading import Timer
 from apscheduler.schedulers.blocking import BlockingScheduler
+from unidecode import unidecode
 #sauce = Request('https://www.webmd.com/health-insurance/news/20190307/hidden-fda-reports-show-harm-from-medical-devices#1', headers={'User-Agest': 'Mozilla/5.0'})
 
 #webpage = urlopen(sauce).read()
@@ -28,7 +29,7 @@ class Article:
     articleName = ''
     link = ''
     def __init__(self, articleName, link):
-        self.articleName = articleName
+        self.articleName = unidecode(articleName)
         self.link = link
 #makes an article and returns it
 def make_article(articleName, link):
