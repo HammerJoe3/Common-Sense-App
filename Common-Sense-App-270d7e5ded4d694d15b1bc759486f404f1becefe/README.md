@@ -1,1 +1,0 @@
-# Common-Sense project
