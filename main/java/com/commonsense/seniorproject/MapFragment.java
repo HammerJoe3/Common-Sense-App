@@ -7,14 +7,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -28,8 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -37,7 +35,6 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -59,8 +56,6 @@ import com.android.volley.Response;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
-import static java.util.Arrays.asList;
-
 
 @SuppressLint("ValidFragment")
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
@@ -79,8 +74,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private final Context mContext;
     // private FragmentActivity fragContext;
     Location lastLocation;
-
-    boolean markers = false;
 
 
     boolean checkGPS = false;
@@ -147,7 +140,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             if (mMap != null) {
                 mMap.getUiSettings().setZoomControlsEnabled(true);
                 loc = getLocation();
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 15));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 13));
                 getCompleteAddressString(loc.getLatitude(), loc.getLongitude());
                 setMarkers();
             }
@@ -272,7 +265,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 mMap.addMarker(new MarkerOptions().position(geoLocate(place.getAddress())).title(place.getName()));
             }
         }
-        markers = true;
     }
 
     //takes input from user and geolocate than grab long/lat from output
@@ -296,7 +288,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             getPlaces(address.getPostalCode());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             hideSoftKeyboard();
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 10));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 13));
 
         }
     }

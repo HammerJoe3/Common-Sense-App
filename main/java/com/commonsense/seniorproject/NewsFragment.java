@@ -67,11 +67,9 @@ public class NewsFragment extends Fragment {
         pDialog.setMessage("gathering articles...");
         showDialog();
 
-        Log.e("BEFORE REQUEST", "CHECK");
         StringRequest strReq = new StringRequest(Request.Method.POST, CommonSenseConfig.URL_NEWS, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.e("AFTER REQUEST", "CHECK");
                 Log.e("onResponse", "news response: " + response);
                 hideDialog();
 
