@@ -1,4 +1,4 @@
-package com.techno.herbert.weatherapp;
+package com.commonsense.seniorproject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
