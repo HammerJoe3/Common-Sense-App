@@ -1,5 +1,6 @@
 package com.commonsense.seniorproject;
 
+import android.content.Intent;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,6 +14,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -26,11 +28,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -40,7 +48,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import com.android.volley.Response;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
 
 import static java.util.Arrays.asList;
 
@@ -49,16 +66,21 @@ import static java.util.Arrays.asList;
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     Location loc;
+
     MapView mapView;
-    List<List<String>> places = asList(
+    /*List<List<String>> places = asList(
             asList( "Superior Fitness", "1490 NJ-37, Toms River, NJ 08753", "longitude", "latitude"),
             asList( "The U Yoga", "327 Franklin Ave, Wyckoff, NJ 07481", "longitude", "latitude"),
             asList( "Common Sense Corporate Offices", "815 Ensign Dr Lanoka Harbor, NJ 08734", "longitude", "latitude") );
+    */
+    ArrayList<Place> places = new ArrayList<>();
     double latitude;
     double longitude;
     private final Context mContext;
     // private FragmentActivity fragContext;
     Location lastLocation;
+
+    boolean markers = false;
 
 
     boolean checkGPS = false;
@@ -87,6 +109,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         // get the reference of Button\
         mSearchText = (EditText) view.findViewById(R.id.input_search);
         Button btn = view.findViewById(R.id.button2);
+        getPlaces("");
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +129,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mapView = (MapView) view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this); //this is important
+
+
+
         return view;
     }
 
@@ -142,11 +168,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //Enter something which is currently longitude and latitude and return list of places from database
-    public List<List<String>> getPlaces(String postal){
+    //Enter something which is currently postal code and return list of places from database
+    //maybe more efficient if every address in db has longitude and latitude and returns a list of all address in a range of
+    //that input longitude and latitude.
+    public void getPlaces(String postal){
         //TODO: Add Parameters for filtering Database Result
         String tag_string_req = "req_news";
-
         Log.e("BEFORE REQUEST", "CHECK");
 
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
@@ -157,14 +184,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 Log.e("onResponse", "news response: " + response);
 
                 try {
+                    //Response Array from Database
                     JSONArray locations = response;
                     JSONObject jobj;
-                    for (int i = 0; i < locations.length(); i++){
+                    ArrayList<Place> places = new ArrayList<>();
+                    //Iterates through each JSON object in the array
+                    //turns each JSON into a place in the ArrayList
+                    for (int i = 0; i < locations.length(); i++) {
                         jobj = locations.getJSONObject(i);
                         Log.d("DatabaseLoc", jobj.getString("Name"));
-                        //TODO: Add info to places in the format the other methods expect
-                        
+                        //TODO: Get the places actually in the ArrayList
+
+
+                        places.add(new Place(jobj.getString("Name"), jobj.getString("Address"), jobj.getDouble("Latitude"), jobj.getDouble("Longitude")));
+
                     }
+                    storePlaces(places);
 
 
                 } catch (JSONException e) {
@@ -194,7 +229,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
-        return places;
     }
 
     //get address from longitude and latitude to get list of places
@@ -206,7 +240,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
             if (addresses != null) {
                 Address returnedAddress = addresses.get(0);
-                places = (getPlaces(returnedAddress.getLatitude(), returnedAddress.getLongitude()));
+                getPlaces(returnedAddress.getPostalCode());
                 StringBuilder strReturnedAddress = new StringBuilder("");
 
                 for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
@@ -223,15 +257,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         }
     }
 
+    private void storePlaces(ArrayList<Place> places){
+        this.places = places;
+    }
+
     //place markers on the map
     private void setMarkers() {
-        mMap.clear();//clear old makers
-        for (List place: places
+
+        mMap.clear();//clear old markers
+
+        for (Place place: places
              ) {
-            if((!place.get(1).equals("")) && (!place.get(1).equals(null))) {
-                mMap.addMarker(new MarkerOptions().position(geoLocate((String) place.get(1))).title((String) place.get(0)));
+            if((!(place.getName().equals(null))) && (!(place.getAddress().equals(null)))) {
+                mMap.addMarker(new MarkerOptions().position(geoLocate(place.getAddress())).title(place.getName()));
             }
         }
+        markers = true;
     }
 
     //takes input from user and geolocate than grab long/lat from output
@@ -252,10 +293,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             Address address = list.get(0);
             Log.d("MapFragment", "geoLocate: found a location: " + address.toString());
             Log.d("MapFragment", "postal: " + address.getPostalCode());
-            places = (getPlaces(address.getLatitude(), address.getLongitude()));
+            getPlaces(address.getPostalCode());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             hideSoftKeyboard();
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 14));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 10));
 
         }
     }
