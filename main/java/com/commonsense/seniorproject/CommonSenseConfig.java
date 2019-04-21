@@ -13,6 +13,6 @@ public class CommonSenseConfig {
     //Server get news url
     public static String URL_NEWS = "http://ec2-3-88-234-227.compute-1.amazonaws.com/common_sense_news.php";
 
-    public static String URL_LOCTEST = "http://ec2-3-88-234-227.compute-1.amazonaws.com/commons_sense_locationTest.php";
+    public static String URL_LOC = "http://ec2-3-88-234-227.compute-1.amazonaws.com/common_sense_locations.php";
 
 }
