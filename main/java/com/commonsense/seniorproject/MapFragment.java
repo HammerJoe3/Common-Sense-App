@@ -177,7 +177,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         Log.e("BEFORE REQUEST", "CHECK");
 
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-        JsonArrayRequest strReq = new JsonArrayRequest(Request.Method.POST, CommonSenseConfig.URL_LOCTEST, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest strReq = new JsonArrayRequest(Request.Method.POST, CommonSenseConfig.URL_LOC, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.e("AFTER REQUEST", "CHECK");
