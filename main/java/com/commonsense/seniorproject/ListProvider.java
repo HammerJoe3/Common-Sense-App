@@ -46,7 +46,7 @@ public class ListProvider implements RemoteViewsFactory {
                 AppWidgetManager.INVALID_APPWIDGET_ID);
 
         populateListItem();
-
+        populateWidget();
     }
 
 
