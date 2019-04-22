@@ -43,6 +43,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -109,7 +110,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         // get the reference of Button\
         mSearchText = (EditText) view.findViewById(R.id.input_search);
         Button btn = view.findViewById(R.id.button2);
-        getPlaces("");
+        getPlaces(loc.getLatitude(), loc.getLongitude());
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +132,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mapView.getMapAsync(this); //this is important
 
 
-
         return view;
     }
 
@@ -147,17 +147,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             if (mMap != null) {
                 mMap.getUiSettings().setZoomControlsEnabled(true);
                 loc = getLocation();
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 15));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 12));
                 getCompleteAddressString(loc.getLatitude(), loc.getLongitude());
                 setMarkers();
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
             return;
-        }
-        else
-        {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40, -80), 15));
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40, -80), 12));
         }
         init();
         //mMap.setMyLocationEnabled(true);
@@ -171,7 +169,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     //Enter something which is currently postal code and return list of places from database
     //maybe more efficient if every address in db has longitude and latitude and returns a list of all address in a range of
     //that input longitude and latitude.
-    public void getPlaces(String postal){
+    public void getPlaces(double lat, double lng) {
         //TODO: Add Parameters for filtering Database Result
         String tag_string_req = "req_news";
         Log.e("BEFORE REQUEST", "CHECK");
@@ -240,7 +238,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
             if (addresses != null) {
                 Address returnedAddress = addresses.get(0);
-                getPlaces(returnedAddress.getPostalCode());
+                getPlaces(returnedAddress.getLatitude(), returnedAddress.getLongitude());
                 StringBuilder strReturnedAddress = new StringBuilder("");
 
                 for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
@@ -257,7 +255,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         }
     }
 
-    private void storePlaces(ArrayList<Place> places){
+    private void storePlaces(ArrayList<Place> places) {
         this.places = places;
     }
 
@@ -267,13 +265,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mMap.clear();//clear old markers
 
         for (Place place: places
-             ) {
+        ) {
             if((!(place.getName().equals(null))) && (!(place.getAddress().equals(null)))) {
-                mMap.addMarker(new MarkerOptions().position(geoLocate(place.getAddress())).title(place.getName()));
+                if(place.getType().equals("Treated")) {
+                    Log.w("Type", "Type"+place.getType());
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                }
+                else if (place.getType().equals("Sales")) {
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                }
             }
         }
         markers = true;
     }
+
+
 
     //takes input from user and geolocate than grab long/lat from output
     private void geoLocate(){
@@ -293,10 +299,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             Address address = list.get(0);
             Log.d("MapFragment", "geoLocate: found a location: " + address.toString());
             Log.d("MapFragment", "postal: " + address.getPostalCode());
-            getPlaces(address.getPostalCode());
+            getPlaces(address.getLatitude(), address.getLongitude());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             hideSoftKeyboard();
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 10));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 12));
 
         }
     }

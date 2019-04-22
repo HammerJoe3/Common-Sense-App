@@ -10,7 +10,7 @@ public class Place {
     private String treatDate;
     private String renewalDate;
 
-    public Place(String name, String address, double latitude, double longitude, String type, String treatDate, String renewalDate){
+    public Place(String name, String address, double latitude, double longitude, String type, String treated_date, String renewal_date){
         this.name = name;
         this.address = address;
         this.latitude = latitude;
