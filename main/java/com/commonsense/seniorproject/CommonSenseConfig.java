@@ -10,9 +10,12 @@ public class CommonSenseConfig {
     // Server user update url
     public static String URL_UPDATE_USER_INFO = "http://ec2-3-88-234-227.compute-1.amazonaws.com/common_sense_change_user_info.php";
     
-    //Server get news url
+    // Server get news url
     public static String URL_NEWS = "http://ec2-3-88-234-227.compute-1.amazonaws.com/common_sense_news.php";
 
-    public static String URL_LOC = "http://ec2-3-88-234-227.compute-1.amazonaws.com/common_sense_locations.php";
+    // Server user change password url
+    public static String URL_CHANGE_PASSWORD = "http://ec2-3-88-234-227.compute-1.amazonaws.com/common_sense_change_password.php";
+
+    public static String URL_LOCTEST = "http://ec2-3-88-234-227.compute-1.amazonaws.com/commons_sense_locationTest.php";
 
 }

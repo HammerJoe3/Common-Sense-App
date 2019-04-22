@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,8 @@ public class ProfileFragment extends Fragment {
     private Button genEst;
     private Button save;
     private Button cancel;
-    private Button redeem;
+    private Button coupon;
+    private Button change_password;
     private EditText inputFirstName;
     private EditText inputLastName;
     private EditText inputEmail;
@@ -51,7 +53,8 @@ public class ProfileFragment extends Fragment {
         genEst = (Button) view.findViewById(R.id.genEst);
         save = (Button) view.findViewById(R.id.save);
         cancel = (Button) view.findViewById(R.id.cancel);
-        redeem = (Button) view.findViewById(R.id.redeemPoints);
+        coupon = (Button) view.findViewById(R.id.redeemPoints);
+        change_password = (Button) view.findViewById(R.id.change_password);
         inputFirstName = (EditText) view.findViewById(R.id.profileFirst);
         inputEmail = (EditText) view.findViewById(R.id.profileEmail);
         inputLastName = (EditText) view.findViewById(R.id.profileLast);
@@ -76,6 +79,11 @@ public class ProfileFragment extends Fragment {
                 String first = inputFirstName.getText().toString();
                 String last = inputLastName.getText().toString();
                 String email = inputEmail.getText().toString();
+
+                // Check if the email has the correct email format (example@whatever.blank)
+                if (!isEmailValid(email)) {
+                    inputEmail.setError("Please enter a valid email");
+                }
 
                 updateUserInDatabase(userID, first, last, email);
             }
@@ -104,6 +112,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), EstimateActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        change_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ChangePassword.class);
                 startActivity(intent);
             }
         });
@@ -199,5 +215,14 @@ public class ProfileFragment extends Fragment {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    /**
+     * Checks if email is in correct email format (example@whatever.blank)
+     * @param email
+     * @return
+     */
+    private boolean isEmailValid(CharSequence email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }

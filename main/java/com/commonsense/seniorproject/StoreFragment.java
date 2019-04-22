@@ -1,5 +1,7 @@
 package com.commonsense.seniorproject;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +21,10 @@ public class StoreFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //Intent i = new Intent(Intent.ACTION_VIEW,
+        //        Uri.parse("https://smartcommonsense.com/shop/"));
+        //startActivity(i);
 
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_store, container, false);

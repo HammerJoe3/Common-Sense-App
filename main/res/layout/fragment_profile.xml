@@ -8,6 +8,7 @@
     android:paddingLeft="1dp"
     android:paddingRight="1dp">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="firstName"
+            android:text="First Name"
             android:textSize="24sp" />
 
         <EditText
@@ -45,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="lastName"
+            android:text="Last Name"
             android:textSize="24sp" />
 
         <EditText
@@ -88,12 +89,57 @@
         android:gravity="center"
         android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/save"
+            style="@android:style/Widget.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Save Changes" />
+
+        <Button
+            android:id="@+id/cancel"
+            style="@android:style/Widget.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Cancel Changes" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/change_password"
+        style="@android:style/Widget.Button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Change Password"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal">
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Points"
+            android:text="Coupons"
             android:textSize="24sp" />
 
         <Button
@@ -102,8 +148,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="redeem points
-(not yet implemented)" />
+            android:text="generate coupon
+(not yet implemented)"
+            android:textSize="10sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -133,33 +180,6 @@ Click here to get an estimate -->"
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/save"
-            style="@android:style/Widget.Button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Save Changes" />
-
-        <Button
-            android:id="@+id/cancel"
-            style="@android:style/Widget.Button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Cancel Changes" />
-
-    </LinearLayout>
-
     <Button
         android:id="@+id/logout"
         style="@android:style/Widget.Button"
@@ -168,6 +188,6 @@ Click here to get an estimate -->"
         android:layout_weight="1"
         android:gravity="center"
         android:text="logout"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
 </LinearLayout>

@@ -196,7 +196,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                         //TODO: Get the places actually in the ArrayList
 
 
-                        places.add(new Place(jobj.getString("Name"), jobj.getString("Address"), jobj.getDouble("Latitude"), jobj.getDouble("Longitude"), jobj.getString("Type"), jobj.getString("Treated Date"), jobj.getString("Renewal Date")));
+                        places.add(new Place(jobj.getString("Name"), jobj.getString("Address"), jobj.getDouble("Latitude"), jobj.getDouble("Longitude")));
 
                     }
                     storePlaces(places);
