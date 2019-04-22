@@ -269,7 +269,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             if((!(place.getName().equals(null))) && (!(place.getAddress().equals(null)))) {
                 if(place.getType().equals("Treated")) {
                     Log.w("Type", "Type"+place.getType());
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 }
                 else if (place.getType().equals("Sales")) {
                     mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
