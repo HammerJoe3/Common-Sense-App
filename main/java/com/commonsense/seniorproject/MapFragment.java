@@ -9,6 +9,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.LevelListDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -269,10 +272,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             if((!(place.getName().equals(null))) && (!(place.getAddress().equals(null)))) {
                 if(place.getType().equals("Treated")) {
                     Log.w("Type", "Type"+place.getType());
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    Bitmap bitmapOut = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.desinfectant), 60, 60, false);
+                    mMap.addMarker(new MarkerOptions().position(geoLocate(place.getAddress())).title(place.getName()).icon(BitmapDescriptorFactory.fromBitmap(bitmapOut)).snippet("Expiration: " + place.getRenewalDate()));
                 }
                 else if (place.getType().equals("Sales")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                    Bitmap bitmapOut = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.shoppingcart), 60, 60, false);
+                    mMap.addMarker(new MarkerOptions().position(geoLocate(place.getAddress())).title(place.getName()).icon(BitmapDescriptorFactory.fromBitmap(bitmapOut)));
                 }
             }
         }
