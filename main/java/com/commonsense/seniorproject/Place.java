@@ -16,8 +16,8 @@ public class Place {
         this.latitude = latitude;
         this.longitude = longitude;
         this.type = type;
-        this.treatDate = treatDate;
-        this.renewalDate = renewalDate;
+        this.treatDate = treated_date;
+        this.renewalDate = renewal_date;
     }
 
     public String getName(){
