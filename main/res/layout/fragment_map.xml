@@ -14,7 +14,7 @@
         android:textSize="25sp" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/target"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
@@ -67,7 +67,7 @@
             android:id="@+id/relLayout1">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/search"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"
