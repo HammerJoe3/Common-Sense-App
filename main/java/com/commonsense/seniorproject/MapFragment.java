@@ -3,21 +3,17 @@ package com.commonsense.seniorproject;
 import android.content.Intent;
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.LevelListDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -31,8 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,7 +34,6 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,24 +56,16 @@ import com.android.volley.Response;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
-import static java.util.Arrays.asList;
 
-
-@SuppressLint("ValidFragment")
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     Location loc;
 
     MapView mapView;
-    /*List<List<String>> places = asList(
-            asList( "Superior Fitness", "1490 NJ-37, Toms River, NJ 08753", "longitude", "latitude"),
-            asList( "The U Yoga", "327 Franklin Ave, Wyckoff, NJ 07481", "longitude", "latitude"),
-            asList( "Common Sense Corporate Offices", "815 Ensign Dr Lanoka Harbor, NJ 08734", "longitude", "latitude") );
-    */
+
     ArrayList<Place> places = new ArrayList<>();
     double latitude;
     double longitude;
-    private final Context mContext;
     // private FragmentActivity fragContext;
     Location lastLocation;
 
@@ -100,10 +85,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private EditText mSearchText;
 
 
-    public MapFragment(Context mContext) {
-        this.mContext = mContext;
-        getLocation();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,9 +92,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         // get the reference of Button\
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            getLocation();
+            getPlaces(loc.getLatitude(), loc.getLongitude());
+        }
         mSearchText = (EditText) view.findViewById(R.id.input_search);
-        Button btn = view.findViewById(R.id.button2);
-        getPlaces(loc.getLatitude(), loc.getLongitude());
+        Button btn = view.findViewById(R.id.search);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +105,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 setMarkers();
             }
         });
-        Button btn2 = view.findViewById(R.id.button3);
+        Button btn2 = view.findViewById(R.id.target);
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,8 +117,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mapView = (MapView) view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this); //this is important
-
-
         return view;
     }
 
@@ -144,7 +126,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mMap = googleMap;
         //saveMap(googleMap);
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-        ActivityCompat.requestPermissions(MapFragment.this.getActivity(), permissions, 99);
+        ActivityCompat.requestPermissions(getActivity(), permissions, 99);
         getPermissions();
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (mMap != null) {
@@ -158,7 +140,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
             return;
         } else {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40, -80), 12));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8, -75), 13));
+            getPlaces(39.8, -75);
+            setMarkers();
         }
         init();
         //mMap.setMyLocationEnabled(true);
@@ -177,7 +161,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         String tag_string_req = "req_news";
         Log.e("BEFORE REQUEST", "CHECK");
 
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JsonArrayRequest strReq = new JsonArrayRequest(Request.Method.POST, CommonSenseConfig.URL_LOC, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -236,7 +220,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @SuppressLint("LongLogTag")
     private void getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
-        Geocoder geocoder = new Geocoder(mContext);
+        Geocoder geocoder = new Geocoder(getActivity());
         try {
             List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
             if (addresses != null) {
@@ -292,7 +276,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         String searchString = mSearchText.getText().toString();
 
-        Geocoder geocoder = new Geocoder(mContext);
+        Geocoder geocoder = new Geocoder(getActivity());
         List<Address> list = new ArrayList<>();
         try{
             list = geocoder.getFromLocationName(searchString, 1);
@@ -304,10 +288,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             Address address = list.get(0);
             Log.d("MapFragment", "geoLocate: found a location: " + address.toString());
             Log.d("MapFragment", "postal: " + address.getPostalCode());
-            getPlaces(address.getLatitude(), address.getLongitude());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             hideSoftKeyboard();
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 12));
+            getPlaces(address.getLatitude(), address.getLongitude());
 
         }
     }
@@ -320,7 +304,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         LatLng placeLatLng = new LatLng(80, 80);
 
-        Geocoder geocoder = new Geocoder(mContext);
+        Geocoder geocoder = new Geocoder(getActivity());
         List<Address> list = new ArrayList<>();
         try{
             list = geocoder.getFromLocationName(searchString, 1);
@@ -347,20 +331,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     //Ask for location permissions
     private void getPermissions(){
         // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(mContext,
+        if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Permission is not granted
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             } else {
                 // No explanation needed; request the permission
-                ActivityCompat.requestPermissions((Activity) mContext,
+                ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                         1);
 
@@ -396,15 +380,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     //hide the soft keyboard
     private void hideSoftKeyboard(){
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mapView.getWindowToken(),0);
     }
 
     //get users location
     private Location getLocation() {
         try {
-            locationManager = (LocationManager) mContext
-                    .getSystemService(mContext.LOCATION_SERVICE);
+            locationManager = (LocationManager) getActivity()
+                    .getSystemService(getActivity().LOCATION_SERVICE);
 
             // get GPS status
             checkGPS = locationManager
@@ -415,14 +399,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (!checkGPS && !checkNetwork) {
-                Toast.makeText(mContext, "No Service Provider is available", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "No Service Provider is available", Toast.LENGTH_SHORT).show();
             } else {
                 this.canGetLocation = true;
 
                 // if GPS Enabled get lat/long using GPS Services
                 if (checkGPS) {
 
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
                         //    ActivityCompat#requestPermissions
                         // here to request the missing permissions, and then overriding
@@ -501,7 +485,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     }
 
     public void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
 
 
         alertDialog.setTitle("GPS is not Enabled!");
@@ -512,7 +496,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
+                getActivity().startActivity(intent);
             }
         });
 
@@ -531,7 +515,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void stopListener() {
         if (locationManager != null) {
 
-            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
