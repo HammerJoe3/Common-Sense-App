@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="323.0" minWidth="-Infinity" prefHeight="323.0" prefWidth="445.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Control.CreateConfigController">
+   <children>
+      <Label layoutX="33.0" layoutY="14.0" text="Please Enter the Information for the Smart Common Sense Remote Server" />
+      <Label layoutX="33.0" layoutY="64.0" text="Remote Host:" />
+      <Label layoutX="33.0" layoutY="104.0" text="Remote User:" />
+      <Label layoutX="33.0" layoutY="144.0" text="Database User:" />
+      <Label layoutX="33.0" layoutY="184.0" text="Database Password:" />
+       <Label layoutX="33.0" layoutY="224.0" text="Database:" />
+      <TextField fx:id="configHost" layoutX="163.0" layoutY="60.0" prefHeight="25.0" prefWidth="250.0" />
+      <TextField fx:id="configUser" layoutX="163.0" layoutY="100.0" prefHeight="25.0" prefWidth="250.0" />
+      <TextField fx:id="configDBUser" layoutX="163.0" layoutY="140.0" prefHeight="25.0" prefWidth="250.0" />
+      <PasswordField fx:id="configPass" layoutX="163.0" layoutY="180.0" prefHeight="25.0" prefWidth="250.0" />
+       <TextField fx:id="configDB" layoutX="163.0" layoutY="220.0" prefHeight="25.0" prefWidth="250.0" />
+      <Button fx:id="configAcceptBtn" layoutX="86.0" layoutY="257.0" mnemonicParsing="false" onAction="#configAcceptBtnAction" prefHeight="25.0" prefWidth="71.0" text="OK" />
+      <Button fx:id="configCancelBtn" layoutX="288.0" layoutY="257.0" mnemonicParsing="false" onAction="#configCancelBtnAction" prefHeight="25.0" prefWidth="71.0" text="Cancel" />
+   </children>
+</Pane>
