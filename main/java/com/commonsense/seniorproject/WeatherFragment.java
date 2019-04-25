@@ -24,13 +24,15 @@ public class WeatherFragment extends Fragment
     private TextView weatherTextView;
     private TextView tempTextView;
     private TextView humidTextView;
-    private TextView pressTextView;
+    private TextView pressTextView
+    private TextView messageTextView;
 
     private String zipCode = "";
     private String weather = "";
     private String temp = "";
     private String humidity = "";
     private String pressure = "";
+    private String message = "";
 
     private SharedPreferences prefs;
 
@@ -46,6 +48,7 @@ public class WeatherFragment extends Fragment
         tempTextView = (TextView) view.findViewById(R.id.textTemp);
         humidTextView = (TextView) view.findViewById(R.id.textHumidity);
         pressTextView = (TextView) view.findViewById(R.id.textPressure);
+        messageTextView = (TextView) view.findViewById(R.id.textWeatherMessage);
 
         zipCodeEditText.setOnEditorActionListener(this);
 
@@ -63,6 +66,7 @@ public class WeatherFragment extends Fragment
         editor.putString("temp", temp);
         editor.putString("humidity", humidity);
         editor.putString("pressure", pressure);
+        editor.putBoolean("active", active);
 
 
         super.onPause();
@@ -77,7 +81,8 @@ public class WeatherFragment extends Fragment
         zipCode = prefs.getString("zipCode", "");
         temp = prefs.getString("zipCode", "");
         humidity = prefs.getString("zipCode", "");
-        pressure = prefs.getString("zipCode", "");
+        pressure = prefs.getString("zipCode", 
+        active = prefs.getBoolean("active", false);
 
         setWeather();
     }
@@ -89,6 +94,15 @@ public class WeatherFragment extends Fragment
         Weather w = new Weather(zipCode);
 
         weather = w.getMain();
+        
+        if(weather == null)
+        {
+            messageTextView.setText("Invalid Zip Code");
+            return;
+        }
+
+        active = true;
+        
         temp = String.format("%.2f", w.getTemperature());
         humidity = String.format("%.0f", w.getHumidity());
         pressure = String.format("%.0f", w.getPressure());
@@ -98,10 +112,14 @@ public class WeatherFragment extends Fragment
 
     private void setWeather()
     {
-        weatherTextView.setText(weather);
-        tempTextView.setText(temp);
-        humidTextView.setText(humidity);
-        pressTextView.setText(pressure);
+        if(active)
+        {
+            weatherTextView.setText(weather);
+            tempTextView.setText(temp + "' F");
+            humidTextView.setText(humidity + "%");
+            pressTextView.setText(pressure + " hPa");
+            messageTextView.setText(message);
+        }
     }
 
     @Override
