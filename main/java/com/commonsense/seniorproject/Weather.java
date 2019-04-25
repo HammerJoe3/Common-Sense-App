@@ -18,6 +18,7 @@ public class Weather
 
     String result_main;
     String result_description;
+    String result_message;
 
     Double result_temp;
     Double result_pressure;
@@ -108,5 +109,27 @@ public class Weather
     public double getHumidity()
     {
         return result_humidity;
+    }
+
+    public String getWeatherMessage()
+    {
+        if(result_temp > 85)
+        {
+            result_message = "Make sure you wear sunscreen today!";
+        }
+        else if(result_temp < 30)
+        {
+            result_message = "Be careful of any ice!";
+        }
+        else if(result_temp < 50)
+        {
+            result_message = "Use Common Sense to avoid bad germs!";
+        }
+        else
+        {
+            result_message = "Make sure you protect yourself with Common Sense!";
+        }
+
+        return result_message;
     }
 }
