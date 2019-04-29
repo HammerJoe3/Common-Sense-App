@@ -1,11 +1,11 @@
 package com.commonsense.seniorproject;
 
-import android.content.Intent;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,7 +32,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,18 +46,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.android.volley.Response;
-import com.android.volley.Request;
-import com.android.volley.VolleyError;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
@@ -96,23 +96,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             getLocation();
             getPlaces(loc.getLatitude(), loc.getLongitude());
         }
+        //get reference to text editor
         mSearchText = (EditText) view.findViewById(R.id.input_search);
+        //get reference to search button
         Button btn = view.findViewById(R.id.search);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // on search button press, get locations at input and set them as markers
                 geoLocate();
                 setMarkers();
             }
         });
+        //get reference to target button
         Button btn2 = view.findViewById(R.id.target);
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // on target button press, get locations at user location and set them as markers
                 onMapReady(mMap);
             }
         });
+        //get reference to help button
+        Button btn3 = view.findViewById(R.id.help);
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // on help button press, get MapPopUpHelp class as a pop up activity
+                Intent intent = new Intent(getActivity(), MapPopUpHelp.class);
+                startActivity(intent);
+            }
+        });
+        //initialize keycode for enter
         init();
+        // check or ask for user location permissions
         getPermissions();
         mapView = (MapView) view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
@@ -128,6 +145,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         ActivityCompat.requestPermissions(getActivity(), permissions, 99);
         getPermissions();
+        // if permission is enabled set view and map markers at users current location else set view at default location and getPlaces for the default location
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (mMap != null) {
                 mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -157,7 +175,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     //maybe more efficient if every address in db has longitude and latitude and returns a list of all address in a range of
     //that input longitude and latitude.
     public void getPlaces(double lat, double lng) {
-        //TODO: Add Parameters for filtering Database Result
         String tag_string_req = "req_news";
         Log.e("BEFORE REQUEST", "CHECK");
 
@@ -251,14 +268,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         mMap.clear();//clear old markers
 
+        // loop through each place retrieve from the Database
         for (Place place: places
         ) {
             if((!(place.getName().equals(null))) && (!(place.getAddress().equals(null)))) {
+                // if place is treated set marker using custom bitmap at that location
                 if(place.getType().equals("Treated")) {
-                    Log.w("Type", "Type"+place.getType());
                     Bitmap bitmapOut = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.desinfectant), 60, 60, false);
                     mMap.addMarker(new MarkerOptions().position(geoLocate(place.getAddress())).title(place.getName()).icon(BitmapDescriptorFactory.fromBitmap(bitmapOut)).snippet("Expiration: " + place.getRenewalDate()));
                 }
+                // if place is sales set marker using custom bitmap at that location
                 else if (place.getType().equals("Sales")) {
                     Bitmap bitmapOut = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.shoppingcart), 60, 60, false);
                     mMap.addMarker(new MarkerOptions().position(geoLocate(place.getAddress())).title(place.getName()).icon(BitmapDescriptorFactory.fromBitmap(bitmapOut)));
@@ -289,7 +308,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             Log.d("MapFragment", "geoLocate: found a location: " + address.toString());
             Log.d("MapFragment", "postal: " + address.getPostalCode());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
-            hideSoftKeyboard();
+            hideSoftKeyboard();// hide keyboard after geolocation on the input
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 12));
             getPlaces(address.getLatitude(), address.getLongitude());
 
@@ -317,7 +336,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
             Log.d("MapFragment", "geoLocate: found a location: " + address.toString());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
-            hideSoftKeyboard();
+            hideSoftKeyboard();// hide keyboard after geolocation on the input
             placeLatLng = new LatLng(address.getLatitude(), address.getLongitude());
             return placeLatLng;
         }
@@ -336,28 +355,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Permission is not granted
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+                //  try again to request the permission.
             } else {
-                // No explanation needed; request the permission
+                // request the permission
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                         1);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         } else {
             // Permission has already been granted
         }
     }
 
-    //Run geolocate if enter is pressed
+    //Run geolocation if enter is pressed
     private void init(){
         Log.d("MapFragment", "init: initializing");
 
@@ -369,7 +381,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                         || keyEvent.getAction() == KeyEvent.ACTION_DOWN
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
 
-                    //execute our method for searching
+                    //execute our method for geolocation
                     geoLocate();
                 }
 
@@ -407,13 +419,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 if (checkGPS) {
 
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
+                        // request permissions check
                     }
                     locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
@@ -480,59 +486,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mapView.onLowMemory();
     }
 
-    public boolean canGetLocation() {
-        return this.canGetLocation;
-    }
-
-    public void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-
-
-        alertDialog.setTitle("GPS is not Enabled!");
-
-        alertDialog.setMessage("Do you want to turn on GPS?");
-
-
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                getActivity().startActivity(intent);
-            }
-        });
-
-
-        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-
-        alertDialog.show();
-    }
-
-
-    public void stopListener() {
-        if (locationManager != null) {
-
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            locationManager.removeUpdates(MapFragment.this);
-        }
-    }
-
-
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
 
     @Override
     public void onLocationChanged(Location location) {
