@@ -174,20 +174,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     //Enter something which is currently postal code and return list of places from database
     //maybe more efficient if every address in db has longitude and latitude and returns a list of all address in a range of
     //that input longitude and latitude.
-    public void getPlaces(double lat, double lng) {
+    public void getPlaces(final double lat, final double lng) {
+        //TODO: Add Parameters for filtering Database Result
         String tag_string_req = "req_news";
         Log.e("BEFORE REQUEST", "CHECK");
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        JsonArrayRequest strReq = new JsonArrayRequest(Request.Method.POST, CommonSenseConfig.URL_LOC, null, new Response.Listener<JSONArray>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, CommonSenseConfig.URL_LOC, new Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(String response) {
                 Log.e("AFTER REQUEST", "CHECK");
                 Log.e("onResponse", "news response: " + response);
 
                 try {
                     //Response Array from Database
-                    JSONArray locations = response;
+                    JSONArray locations = new JSONArray(response);
                     JSONObject jobj;
                     ArrayList<Place> places = new ArrayList<>();
                     //Iterates through each JSON object in the array
@@ -202,7 +203,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
                     }
                     storePlaces(places);
-
+                    setMarkers();
 
                 } catch (JSONException e) {
                     // JSON error
@@ -224,8 +225,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 Double longitude = Double.valueOf(lng);
                 // Posting params to location url
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("latitude", latitude.toString());
-                params.put("longitude", longitude.toString());
+                params.put("latitude", String.valueOf(latitude));
+                params.put("longitude", String.valueOf(longitude));
 
                 return params;
             }
