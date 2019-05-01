@@ -220,10 +220,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         }) {
             @Override
             protected Map<String, String> getParams() {
-                // Posting params to news url
+                Double latitude = Double.valueOf(lat);
+                Double longitude = Double.valueOf(lng);
+                // Posting params to location url
                 Map<String, String> params = new HashMap<String, String>();
-
-                //params.put("userID",session.getUserID());
+                params.put("latitude", latitude.toString());
+                params.put("longitude", longitude.toString());
 
                 return params;
             }
