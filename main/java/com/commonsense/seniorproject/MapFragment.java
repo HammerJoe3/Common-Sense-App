@@ -274,13 +274,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             if((!(place.getName().equals(null))) && (!(place.getAddress().equals(null)))) {
                 // if place is treated set marker using custom bitmap at that location
                 if(place.getType().equals("Treated")) {
+                    Log.w("Type", "Type"+place.getType());
                     Bitmap bitmapOut = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.desinfectant), 60, 60, false);
-                    mMap.addMarker(new MarkerOptions().position(geoLocate(place.getAddress())).title(place.getName()).icon(BitmapDescriptorFactory.fromBitmap(bitmapOut)).snippet("Expiration: " + place.getRenewalDate()));
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.fromBitmap(bitmapOut)).snippet("Expiration: " + place.getRenewalDate()));
                 }
-                // if place is sales set marker using custom bitmap at that location
                 else if (place.getType().equals("Sales")) {
                     Bitmap bitmapOut = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.shoppingcart), 60, 60, false);
-                    mMap.addMarker(new MarkerOptions().position(geoLocate(place.getAddress())).title(place.getName()).icon(BitmapDescriptorFactory.fromBitmap(bitmapOut)));
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.fromBitmap(bitmapOut)));
                 }
             }
         }
