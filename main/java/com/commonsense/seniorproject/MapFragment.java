@@ -37,6 +37,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -91,11 +92,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        // get the reference of Button\
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            getLocation();
-            getPlaces(loc.getLatitude(), loc.getLongitude());
-        }
+
         //get reference to text editor
         mSearchText = (EditText) view.findViewById(R.id.input_search);
         //get reference to search button
@@ -105,7 +102,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             public void onClick(View v) {
                 // on search button press, get locations at input and set them as markers
                 geoLocate();
-                setMarkers();
+                //setMarkers();
             }
         });
         //get reference to target button
@@ -152,7 +149,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 loc = getLocation();
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 12));
                 getCompleteAddressString(loc.getLatitude(), loc.getLongitude());
-                setMarkers();
+                //setMarkers();
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -160,7 +157,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8, -75), 13));
             getPlaces(39.8, -75);
-            setMarkers();
+            //setMarkers();
         }
         init();
         //mMap.setMyLocationEnabled(true);
@@ -180,7 +177,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         Log.e("BEFORE REQUEST", "CHECK");
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        StringRequest strReq = new StringRequest(Request.Method.POST, CommonSenseConfig.URL_LOC, new Listener<String>() {
+        StringRequest strReq = new StringRequest(Request.Method.POST, CommonSenseConfig.URL_LOC, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e("AFTER REQUEST", "CHECK");

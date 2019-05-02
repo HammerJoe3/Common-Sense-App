@@ -24,9 +24,9 @@ public class WeatherFragment extends Fragment
     private TextView weatherTextView;
     private TextView tempTextView;
     private TextView humidTextView;
-    private TextView pressTextView
+    private TextView pressTextView;
     private TextView messageTextView;
-
+    private boolean active;
     private String zipCode = "";
     private String weather = "";
     private String temp = "";
@@ -81,7 +81,7 @@ public class WeatherFragment extends Fragment
         zipCode = prefs.getString("zipCode", "");
         temp = prefs.getString("zipCode", "");
         humidity = prefs.getString("zipCode", "");
-        pressure = prefs.getString("zipCode", 
+        pressure = prefs.getString("zipCode", "");
         active = prefs.getBoolean("active", false);
 
         setWeather();

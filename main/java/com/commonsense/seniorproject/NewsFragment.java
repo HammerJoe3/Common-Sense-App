@@ -96,7 +96,7 @@ public class NewsFragment extends Fragment {
                         for(int i =0; i< list.size(); i++) {
                             arrayList.add(list.get(i).getArticleName());
                         }
-                        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1, arrayList);
+                        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, arrayList);
                         listView.setAdapter(arrayAdapter);
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
