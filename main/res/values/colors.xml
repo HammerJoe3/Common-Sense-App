@@ -12,6 +12,7 @@
     <color name="light_grey">#dce6e8</color>
     <color name="light_lavender">#e6e6fa</color>
     <color name="lavender">#e3c2f2</color>
+    <color name="background">#E58CEA</color>
     <color name="dark_purple">#3c234e</color>
     <color name="pink_purple">#9846c3</color>
     <color name="button_background_color">#925</color>
