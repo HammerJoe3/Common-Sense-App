@@ -23,6 +23,7 @@ public class Configuration {
 
     }
 
+    //Returns an instance of the configuration information
     public static Configuration getInstance(){
         if (instance == null){
             instance = new Configuration();
@@ -30,16 +31,24 @@ public class Configuration {
         return instance;
     }
 
+    //Reads the config.ini file for the connection values
+    //Returns true if the file is read successfully
+    //Returns false if the file is not read
     public boolean readConfig() throws IOException {
+        //Sets the path of the config folder to the users home directory .CommonSenseDB
         String configDirectory = System.getProperty("user.home") + File.separator + ".CommonSenseDB";
 
+        //Attempts to make the directory
         File dir = new File(configDirectory);
+        //Establishes the path to the config.ini file and checks if the file already exists
         File path = new File(configDirectory + File.separator + "config.ini");
+        //If the file does not exist, creates the directory and returns false
         if (!path.isFile()){
             dir.mkdir();
             return false;
         }
         else {
+            //If the file does exist, reads and stores the configuration values
             java.util.Properties config = new java.util.Properties();
             config.load(new FileInputStream(configDirectory + File.separator + "config.ini"));
             this.host = config.getProperty("host");

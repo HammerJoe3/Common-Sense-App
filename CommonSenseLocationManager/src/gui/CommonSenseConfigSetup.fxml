@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="323.0" minWidth="-Infinity" prefHeight="323.0" prefWidth="445.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Control.CreateConfigController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="297.0" minWidth="-Infinity" prefHeight="297.0" prefWidth="445.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Control.CreateConfigController">
    <children>
       <Label layoutX="33.0" layoutY="14.0" text="Please Enter the Information for the Smart Common Sense Remote Server" />
       <Label layoutX="33.0" layoutY="64.0" text="Remote Host:" />

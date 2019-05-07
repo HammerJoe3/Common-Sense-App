@@ -22,6 +22,7 @@ public class DbConnection{
     Connection conn = null;
     Session session = null;
 
+    //Gets the credentials and connection values from the config in order to connect to the server and database
     public DbConnection(Configuration config){
         this.host = config.getHost();
         this.user = config.getUser();
@@ -33,10 +34,12 @@ public class DbConnection{
         this.key = config.getKey();
     }
 
+    //Allows access to the Connection class' PreparedStatement creation through this class
     public PreparedStatement prepareStatement(String statement) throws SQLException{
         return conn.prepareStatement(statement);
     }
 
+    //Allows access to the Connection's commit method
     public void commit() throws SQLException{
         conn.commit();
     }
@@ -46,28 +49,31 @@ public class DbConnection{
      * @throws Exception
      */
    public void connect() throws JSchException, ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException {
+       //Establish SSH connection to server
        java.util.Properties sessionConfig = new java.util.Properties();
        sessionConfig.put("StrictHostKeyChecking", "no");
        JSch jsch = new JSch();
        jsch.addIdentity(key);
-       System.out.println("Found file");
+       //System.out.println("Found file");
        session = jsch.getSession(user, host);
        session.setConfig(sessionConfig);
        session.connect();
-       System.out.println("Connected");
+       //System.out.println("Connected");
 
+       //Connect to the MySQL Database
        int assigned_port = session.setPortForwardingL(lport, host, rport);
        Class.forName(driverName).newInstance();
        conn = DriverManager.getConnection(url, dbUser, dbPass);
        conn.setAutoCommit(false);
-       System.out.println("Database Accessed");
+       //System.out.println("Database Accessed");
    }
 
+   //Close the connection and session
    public void disconnect() throws SQLException{
        conn.close();
        session.disconnect();
        //TODO REMOVE ME
-       System.out.println("Closed Connections");
+       //System.out.println("Closed Connections");
    }
 
 }

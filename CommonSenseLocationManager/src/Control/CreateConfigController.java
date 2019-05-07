@@ -24,10 +24,16 @@ public class CreateConfigController {
     {
         try {
             Stage stage = (Stage) configAcceptBtn.getScene().getWindow();
+
+            //Opens a JFileChooser to select the SSH key file for the remote server
             JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
             jfc.setDialogTitle("Please select the SSH key for the remote server");
             jfc.showOpenDialog(null);
+
+            //Creates the correct path for the selected file
             String keyUrl = jfc.getSelectedFile().getCanonicalPath().replace("\\", "\\\\");
+
+            //Establishes a file output for the values entered into the gui that creates .CommonSenseDB/config.ini
             PrintWriter out = new PrintWriter(System.getProperty("user.home") + File.separator + ".CommonSenseDB" + File.separator + "config.ini");
             out.println("host = " + configHost.getText());
             out.println("remoteUser = " + configUser.getText());
@@ -45,6 +51,7 @@ public class CreateConfigController {
         }
     }
 
+    //Cancels creating the configuration
     @FXML private void configCancelBtnAction(){
         Platform.exit();
         System.exit(0);
