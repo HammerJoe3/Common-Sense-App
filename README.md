@@ -2,7 +2,7 @@
 # This is the Common Sense application README
 
 #This file is for the any developers or owners of the application to better understand the processes, hardware and implementation.
-
+@CommonSenseApplication Version#: 1.02
 Common Sense Application
 
   Purpose of the Application
@@ -31,6 +31,17 @@ The application is used to promote Common Sense, a persistent antimicrobial solu
  
  
   Tests / Known Bugs  
+  
+  1) On occasion some devices will not update the widget
+  
+  2) For the application estimate function the input boxes will not blur all boxes can be filled in causing an in-app error
+  
+  3) Some occasions weather message is not correct
+  
+  4) After a few days the Widget may crash. This may fix itself or has to be manually done by user
+  
+  
+  
   
   
   
