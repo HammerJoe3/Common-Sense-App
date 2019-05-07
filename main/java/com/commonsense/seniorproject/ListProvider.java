@@ -17,7 +17,7 @@ public class ListProvider implements RemoteViewsFactory {
     private Context context;
     private int appWidgetId;
 
-    private String database_news_list;
+
 
     public ListProvider(Context context, Intent intent, String result) {
         this.context = context;
@@ -81,7 +81,7 @@ public class ListProvider implements RemoteViewsFactory {
     public void onDataSetChanged() {
 
         AppController appController = new AppController();
-        database_news_list = appController.futureRequestInWidget();
+        String database_news_list = appController.futureRequestInWidget();
         Log.e("CHECKING RESULT", " " + database_news_list);
         populateListItem(database_news_list);
 
@@ -99,7 +99,7 @@ public class ListProvider implements RemoteViewsFactory {
         news = news.getArticles(result);
         ArrayList<News> list = new ArrayList<News>();
         list =news.getNewsList();
-        for (int i= 0; i< 10; i++){
+        for (int i= 0; i< 25; i++){
             listItemList.add(list.get(i));
         }
         listItemList.add(new News("viewmore","Click Here To View More Articles", ""));
