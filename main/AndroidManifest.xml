@@ -20,9 +20,9 @@ package="com.commonsense.seniorproject">
 <application
     android:name=".AppController"
     android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
+    android:icon="@mipmap/common_sense_logo"
     android:label="@string/app_name"
-    android:roundIcon="@mipmap/ic_launcher_round"
+    android:roundIcon="@mipmap/common_sense_logo_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme"
     android:usesCleartextTraffic="true">
