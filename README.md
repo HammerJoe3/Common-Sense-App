@@ -40,7 +40,7 @@ The application is used to promote Common Sense, a persistent antimicrobial solu
   
   4) After a few days the Widget may crash. This may fix itself or has to be manually done by user
   
-  5) The Location manager displays treated dates as one day before the date reflected in the database.l
+  5) The Location manager displays treated dates as one day before the date reflected in the database.
   
   
   
