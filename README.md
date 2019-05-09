@@ -42,6 +42,9 @@ The application is used to promote Common Sense, a persistent antimicrobial solu
   
   5) The Location manager displays treated dates as one day before the date reflected in the database.
   
+  6) Google map search feature keypad will not show the check marker instead of enter. However, the feature still works if the search 
+  button is pressed instead.
+  
   
   
   
