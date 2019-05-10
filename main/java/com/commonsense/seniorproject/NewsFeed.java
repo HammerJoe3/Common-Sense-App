@@ -2,7 +2,10 @@ package com.commonsense.seniorproject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+/*
+Created By Dylan Shapiro 
 
+*/
 
 
 import java.util.ArrayList;
@@ -11,20 +14,36 @@ public class NewsFeed {
     public NewsFeed(){
 
     }
+    /*
+    constructor takes arraylist of news objects
+    */
     public NewsFeed(ArrayList<News> newsList) {
         this.newsList = newsList;
     }
+    /*
+    to string prints all objects in the list
+    */
     @Override
     public String toString() {
         return "NewsFeed [newsList=" + newsList + "]";
     }
+    
+    /*
+    returns news list
+    */
     public ArrayList<News> getNewsList() {
         return newsList;
     }
+    
+    /*
+    sets the news list
+    */
     public void setNewsList(ArrayList<News> newsList) {
         this.newsList = newsList;
     }
-
+    /*
+    parses html response from data base and returns it in a list of news objects
+    */
     public NewsFeed getArticles(String l) {
 
         ArrayList<News> newsList = new ArrayList<News>();
