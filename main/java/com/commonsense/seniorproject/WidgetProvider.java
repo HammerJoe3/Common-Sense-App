@@ -8,6 +8,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+/*
+Created By Dylan Shapiro 
+
+*/
+
+
 
 public class WidgetProvider extends AppWidgetProvider {
     public static final String ACTION_TOAST = "actionToast";
@@ -57,7 +63,11 @@ public class WidgetProvider extends AppWidgetProvider {
         remoteViews.setPendingIntentTemplate(R.id.listViewWidget, clickPendingIntent);
         return remoteViews;
     }
-
+    
+    
+    /*
+        this method is for when a click on the widget is registered it handles it accordingly
+    */    
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
