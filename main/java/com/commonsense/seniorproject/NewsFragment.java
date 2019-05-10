@@ -26,6 +26,11 @@ import android.widget.ListView;
 import android.app.Fragment;
 
 import java.util.ArrayList;
+/*
+Created By Dylan Shapiro 
+
+*/
+
 
 public class NewsFragment extends Fragment {
 
@@ -54,10 +59,7 @@ public class NewsFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Attempts to register the user and add them into the database.  If successful, return to login,
-     * Otherwise, tell the user that the information was wrong and prompt the user to try again
-     */
+    
 
 
     private void getNewsFromDatabase() {
