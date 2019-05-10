@@ -1,3 +1,8 @@
+/*
+Created By Dylan Shapiro 
+
+*/
+
 package com.commonsense.seniorproject;
 
 import java.util.ArrayList;
@@ -11,14 +16,18 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService.RemoteViewsFactory;
 
-
+/*
+*this class is needed for to create the listview for the widget
+*/
 public class ListProvider implements RemoteViewsFactory {
     private ArrayList<News> listItemList = new ArrayList<News>();
     private Context context;
     private int appWidgetId;
 
 
-
+    /*
+    *constructor for listProvider
+    */
     public ListProvider(Context context, Intent intent, String result) {
         this.context = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -76,7 +85,9 @@ public class ListProvider implements RemoteViewsFactory {
     @Override
     public void onCreate() {
     }
-
+    /*
+    * updating the widget when data is changed.
+    */
     @Override
     public void onDataSetChanged() {
 
@@ -93,7 +104,9 @@ public class ListProvider implements RemoteViewsFactory {
     @Override
     public void onDestroy() {
     }
-
+    /*
+    *populating the list for the listview
+    */
     private void populateListItem(String result) {
         NewsFeed news = new NewsFeed();
         news = news.getArticles(result);
