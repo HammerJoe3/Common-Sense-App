@@ -3,7 +3,10 @@ package com.commonsense.seniorproject;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.widget.RemoteViewsService;
+/*
+Created By Dylan Shapiro 
 
+*/
 public class WidgetService extends RemoteViewsService {
     /*
      * So pretty simple just defining the Adapter of the listview
