@@ -60,29 +60,21 @@ import java.util.Map;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
+    //Relevant Variable
     Location loc;
-
     MapView mapView;
-
     ArrayList<Place> places = new ArrayList<>();
     double latitude;
     double longitude;
-    // private FragmentActivity fragContext;
     Location lastLocation;
-
     boolean markers = false;
-
-
     boolean checkGPS = false;
     boolean checkNetwork = false;
     boolean canGetLocation = false;
-
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
     protected LocationManager locationManager;
     private static GoogleMap mMap;
-
     private EditText mSearchText;
 
 
@@ -128,49 +120,48 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         init();
         // check or ask for user location permissions
         getPermissions();
+        //Display the google map
         mapView = (MapView) view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this); //this is important
         return view;
     }
 
-
+    //loads google map on activity start
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        //save the map
         mMap = googleMap;
-        //saveMap(googleMap);
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         ActivityCompat.requestPermissions(getActivity(), permissions, 99);
+        //check for permissions
         getPermissions();
         // if permission is enabled set view and map markers at users current location else set view at default location and getPlaces for the default location
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (mMap != null) {
+                //set map to users location
                 mMap.getUiSettings().setZoomControlsEnabled(true);
                 loc = getLocation();
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 12));
                 getCompleteAddressString(loc.getLatitude(), loc.getLongitude());
-                //setMarkers();
             }
+            //allow user to view his location and added the zoom button
             mMap.setMyLocationEnabled(true);
+            //disable defualt target button that jumps to users location
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
             return;
         } else {
+            //location permissions disables so set defualt view to rowan
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8, -75), 13));
+            //get places at rowan
             getPlaces(39.8, -75);
-            //setMarkers();
         }
+        //initialize keyboard enter function
         init();
-        //mMap.setMyLocationEnabled(true);
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //Enter something which is currently postal code and return list of places from database
-    //maybe more efficient if every address in db has longitude and latitude and returns a list of all address in a range of
-    //that input longitude and latitude.
+    //Enter longitude and latitude and recieve a list of places
     public void getPlaces(final double lat, final double lng) {
         //TODO: Add Parameters for filtering Database Result
         String tag_string_req = "req_news";
@@ -275,19 +266,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 // if place is treated set marker using custom bitmap at that location
                 if(place.getType().equals("Treated")) {
                     Log.w("Type", "Type"+place.getType());
+                    //format bottle icon
                     Bitmap bitmapOut = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.desinfectant), 60, 60, false);
+                    //set marker at set lat/lng and put places name as well as expiration date
                     mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.fromBitmap(bitmapOut)).snippet("Expiration: " + place.getRenewalDate()));
                 }
                 else if (place.getType().equals("Sales")) {
+                    //format shopping cart icon
                     Bitmap bitmapOut = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.shoppingcart), 60, 60, false);
+                    //set marker at set lat/lng and put places name
                     mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()).icon(BitmapDescriptorFactory.fromBitmap(bitmapOut)));
                 }
             }
         }
         markers = true;
     }
-
-
 
     //takes input from user and geolocate than grab long/lat from output
     private void geoLocate(){
@@ -309,7 +302,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             Log.d("MapFragment", "postal: " + address.getPostalCode());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             hideSoftKeyboard();// hide keyboard after geolocation on the input
+            //move camera to location
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 12));
+            //get places at that location
             getPlaces(address.getLatitude(), address.getLongitude());
 
         }
@@ -337,16 +332,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             Log.d("MapFragment", "geoLocate: found a location: " + address.toString());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             hideSoftKeyboard();// hide keyboard after geolocation on the input
+            //return latlng of input address
             placeLatLng = new LatLng(address.getLatitude(), address.getLongitude());
             return placeLatLng;
         }
         return placeLatLng;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    
     //Ask for location permissions
     private void getPermissions(){
         // Here, thisActivity is the current activity
