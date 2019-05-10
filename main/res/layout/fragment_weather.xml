@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--Weather Fragment developed by Darron Herbert 5/9/2019-->
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
+    
+    <!--Creates a table layout for the weather display-->
+    <!--Each row after the first has two TextViews-->
+    <!--One displays a title and the other the info-->
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--The first row is an EditText for entering a ZipCode-->
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -25,6 +32,7 @@
                 />
         </TableRow>
 
+        <!--The second row has the description of the weather-->
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -47,6 +55,7 @@
 
         </TableRow>
 
+        <!--The third row is the temperature-->
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -70,6 +79,7 @@
 
         </TableRow>
 
+        <!--The fourth row is the humidity-->
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -92,6 +102,7 @@
 
         </TableRow>
 
+        <!--The fifth row is the barometric pressure-->
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -113,6 +124,8 @@
                 android:layout_column="2"/>
 
         </TableRow>
+        
+        <!--The final row is one TextView for displaying a message-->
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
