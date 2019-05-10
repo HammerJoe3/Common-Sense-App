@@ -6,11 +6,10 @@ frome datetime import datetime
 from threading import Timer
 from apscheduler.schedulers.blocking import BlockingScheduler
 from unidecode import unidecode
-#sauce = Request('https://www.webmd.com/health-insurance/news/20190307/hidden-fda-reports-show-harm-from-medical-devices#1', headers={'User-Agest': 'Mozilla/5.0'})
 
-#webpage = urlopen(sauce).read()
 import requests
 import urllib
+#created by Dylan Shapiro
 
 config = ConfigParser.ConfigParser()
 config.read('./config.ini')
@@ -44,40 +43,25 @@ def getArticleInfo(links):
     articles = []
     for link in links:
         response = opener.open(link)
-        
-
         soup = bs.BeautifulSoup(response,'lxml')
-
         body = soup.body
         title = soup.title
-        #found = False
         articles.append(make_article(title.text, link))          
-        #for paragraph in body.find_all('p'):
-            #if len(paragraph) >=25 and not(found):
-         #       print("paragraph " ,paragraph.text)
-        #      found = True
-                
-        #subject = soup.subject
-
-        #print(subject.text)
-        #print("new article")
+        
     return articles
 #gets all links that are articles on the source given and returns a list of the links 
 def getLinks(sourcelink):
     res = requests.get(sourcelink)
-    #print(res.text)
+    
     soup = bs.BeautifulSoup(res.text, 'lxml')
     links = []
     for link in soup.find_all('a', href=True, text =True):
-        #print (link['href'])
+        
         if not (link['href'].find('news') == -1) and not (link['href'].endswith('default.htm')) and not (link['href'].endswith('news/articles')) and not (link['href'].endswith('aspx')):
             if not link['href'].startswith('#') and (link['href'].find('http') == -1):
                 links.append('https:' + link["href"])
-                #print('https:' + link["href"])
-                
             elif not link['href'].startswith('#') and link['href'].find('https:') != -1 :
                 links.append(link["href"])
-                #print(link["href"])
     return getArticleInfo(remove_duplicates(links))
 
 def main():
