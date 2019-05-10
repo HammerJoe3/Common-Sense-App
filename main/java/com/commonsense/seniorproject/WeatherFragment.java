@@ -1,3 +1,6 @@
+/*A class for obtaining information from the Weather class
+and displaying the information in the Android app
+Developed by Darron Herbert 5/9/2019*/
 package com.commonsense.seniorproject;
 
 import android.annotation.SuppressLint;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 public class WeatherFragment extends Fragment
         implements TextView.OnEditorActionListener
 {
+    //Sets up variables for each View
     private View view;
     private EditText zipCodeEditText;
     private TextView weatherTextView;
@@ -36,6 +40,8 @@ public class WeatherFragment extends Fragment
 
     private SharedPreferences prefs;
 
+    /*Runs when the fragment is created
+    Sets the Layout and instantiates the View variables*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -57,6 +63,8 @@ public class WeatherFragment extends Fragment
         return view;
     }
 
+    /*Runs when the fragment is switched away from.
+    Stores the current information to recall later*/
     @Override
     public void onPause()
     {
@@ -72,6 +80,8 @@ public class WeatherFragment extends Fragment
         super.onPause();
     }
 
+    /*Called when the app is reopened after being paused.
+    Restores the saved variables*/
     @Override
     public void onResume()
     {
@@ -87,6 +97,8 @@ public class WeatherFragment extends Fragment
         setWeather();
     }
 
+    /*Creates a weather object and stores the weather data from the object.
+    Won't store anything if the Zip Code is invalid*/
     private void getWeather()
     {
         zipCode = zipCodeEditText.getText().toString();
@@ -110,6 +122,7 @@ public class WeatherFragment extends Fragment
         setWeather();
     }
 
+    /*Sets the TextViews with the weather data that was obtained*/
     private void setWeather()
     {
         if(active)
@@ -122,6 +135,7 @@ public class WeatherFragment extends Fragment
         }
     }
 
+    /*Action listener for when the user hits enter on the EditText*/
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
     {
