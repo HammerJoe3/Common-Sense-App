@@ -13,6 +13,7 @@
         android:text="@string/map_fragment"
         android:textSize="25sp" />
 
+     <!--Get users location button-->
     <Button
         android:id="@+id/target"
         android:layout_width="40dp"
@@ -21,6 +22,8 @@
         android:layout_marginRight="3dp"
         android:layout_marginTop="70dp"
         android:background="@drawable/target" />
+   
+    <!--Button to open help activity popup-->
     <Button
         android:id="@+id/help"
         android:layout_width="40dp"
@@ -30,26 +33,7 @@
         android:layout_marginTop="70dp"
         android:background="@drawable/question_mark" />
 
-    <!--
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="120dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/shoppingcart" />
-
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="1dp"
-        android:layout_marginTop="170dp"
-        android:background="@drawable/desinfectant" />
-    -->
-
+    <!--Layout that contains search for geolocation-->
     <RelativeLayout
         android:id="@+id/relLayout2"
         android:layout_width="wrap_content"
@@ -73,7 +57,8 @@
             android:background="#fff"
             android:elevation="10dp"
             android:id="@+id/relLayout1">
-
+            
+            <!--Search button that activate geolaction on EditText input-->
             <Button
                 android:id="@+id/search"
                 android:layout_width="40dp"
@@ -91,7 +76,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 />
-
+            
+            <!--User input used for geolocation-->
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -107,7 +93,7 @@
 
         </RelativeLayout>
     </RelativeLayout>
-
+    <!--Display google map-->
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
