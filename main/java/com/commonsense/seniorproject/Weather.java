@@ -1,3 +1,5 @@
+/* A class for pulling weather from the OpenWeatherMap API and storing it
+Developed by Darron Herbert 5/9/2019 */
 package com.commonsense.seniorproject;
 
 import java.io.BufferedReader;
@@ -24,17 +26,24 @@ public class Weather
     Double result_pressure;
     Double result_humidity;
 
+    /*Constructor
+    @params: String - Zip Code the user wants the weather for */
     public Weather(String zipCode)
     {
         setZip(zipCode);
     }
 
+    /*Sets the Zip Code and connects to the API
+    @params: String - Zip Code the user wants the weather for*/
     private void setZip(String z)
     {
-        urlInitial = "https://api.openweathermap.org/data/2.5/weather?zip=" + z + "&appid=2c4cfd9f46764d63df3915877c10b49a";
+        //The url of the API
+        urlInitial = "https://api.openweathermap.org/data/2.5/weather?zip=" + z + "&appid=YOURAPIKEYHERE";
 
         String result = "";
 
+        //Attempts to connect to the API with http
+        //If it fails to connect it'll log an error and store nothing
         try {
             URL url_weather = new URL(urlInitial);
 
@@ -68,49 +77,55 @@ public class Weather
         }
     }
 
+    /*Parses the JSON from the API and stores the needed info
+    @params: String - the JSON to be parsed*/
     private void ParseResult(String json) throws JSONException
     {
         JSONObject jsonObject = new JSONObject(json);
 
-        //"weather"
         JSONArray JSONArray_weather = jsonObject.getJSONArray("weather");
         JSONObject JSONObject_weather = JSONArray_weather.getJSONObject(0);
         result_main = JSONObject_weather.getString("main");
         result_description = JSONObject_weather.getString("description");
 
-
-        //"main"
         JSONObject JSONObject_main = jsonObject.getJSONObject("main");
         result_temp = JSONObject_main.getDouble("temp");
         result_pressure = JSONObject_main.getDouble("pressure");
         result_humidity = JSONObject_main.getDouble("humidity");
     }
 
+    //Returns the main weather description
     public String getMain()
     {
         return result_main;
     }
 
+    //Returns a more detailed weather description
     public String getDescription()
     {
         return result_description;
     }
 
+    //Returns the temperature
     public double getTemperature()
     {
         return ((result_temp - 273.15) * (9.0/5.0) + 32) ;
     }
 
+    //Returns the pressure
     public double getPressure()
     {
         return result_pressure;
     }
 
+    //Returns the humidity
     public double getHumidity()
     {
         return result_humidity;
     }
 
+    //TODO: Make this work
+    //Returns a message based on weather conditions
     public String getWeatherMessage()
     {
         if(result_temp > 85)
